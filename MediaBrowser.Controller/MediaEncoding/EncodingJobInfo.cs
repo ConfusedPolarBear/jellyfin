@@ -42,6 +42,8 @@ namespace MediaBrowser.Controller.MediaEncoding
 
         public string OutputFilePath { get; set; }
 
+        public string ConversionOutputFilePath { get; set; }
+
         public string MimeType { get; set; }
 
         public string GetMimeType(string outputPath, bool enableStreamDefault = true)
@@ -687,6 +689,16 @@ namespace MediaBrowser.Controller.MediaEncoding
         /// <summary>
         /// The dash
         /// </summary>
-        Dash
+        Dash,
+
+        /// <summary>
+        /// Transcode that is saved to a temporary file which is eventually downloaded and deleted from the server
+        /// </summary>
+        Download,
+
+        /// <summary>
+        /// In-place media conversion that is saved alongside the original input file
+        /// </summary>
+        Conversion
     }
 }

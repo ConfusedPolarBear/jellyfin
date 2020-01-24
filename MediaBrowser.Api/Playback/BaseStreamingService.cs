@@ -235,7 +235,7 @@ namespace MediaBrowser.Api.Playback
                 state.Request.PlaySessionId,
                 state.MediaSource.LiveStreamId,
                 Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture),
-                TranscodingJobType,
+                state.TranscodingType,
                 process,
                 state.Request.DeviceId,
                 state,
@@ -361,6 +361,22 @@ namespace MediaBrowser.Api.Playback
             else
             {
                 Logger.LogError("FFMpeg exited with code {0}", process.ExitCode);
+            }
+
+            if(job.Type == TranscodingJobType.Conversion)
+            {
+                var source = state.OutputFilePath;
+                var dest = state.ConversionOutputFilePath;
+
+                try
+                {
+                    File.Move(source, dest);
+                    Logger.LogInformation("Converted file successfully moved from {0} to {1}", source, dest);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("Conversion job failed to move output file from {0} to {1}: {2}", source, dest, ex);
+                }
             }
 
             process.Dispose();
